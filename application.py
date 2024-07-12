@@ -62,7 +62,7 @@ def matmul_kernel(
     a_ptrs = a_ptr + (offs_am[:, None] * stride_am + offs_k[None, :] * stride_ak)
     b_ptrs = b_ptr + (offs_k[:, None] * stride_bk + offs_bn[None, :] * stride_bn)
 
-    accumulator = tl.zeros((BLOCK_SIZE_M, BLOCK_SIZE_N), dtype=tl.float32)
+    accumulator = tl.zeros((BLOCK_SIZE_M, BLOCK_SIZE_N), dtype=tl.int32)
     for k in range(0, tl.cdiv(K, BLOCK_SIZE_K)):
         a = tl.load(a_ptrs, mask=offs_k[None, :] < K - k * BLOCK_SIZE_K, other=0.0)
         b = tl.load(b_ptrs, mask=offs_k[:, None] < K - k * BLOCK_SIZE_K, other=0.0)
@@ -71,7 +71,7 @@ def matmul_kernel(
         b_ptrs += BLOCK_SIZE_K * stride_bk
     if ACTIVATION == "leaky_relu":
         accumulator = leaky_relu(accumulator)
-    c = accumulator.to(tl.float16)
+    c = accumulator.to(tl.int32)
 
     offs_cm = pid_m * BLOCK_SIZE_M + tl.arange(0, BLOCK_SIZE_M)
     offs_cn = pid_n * BLOCK_SIZE_N + tl.arange(0, BLOCK_SIZE_N)
@@ -91,7 +91,7 @@ def matmul(a, b, activation=""):
     M, K = a.shape
     K, N = b.shape
 
-    c = torch.empty((M, N), device=a.device, dtype=a.dtype)
+    c = torch.empty((M, N), device=a.device, dtype=torch.int32)
 
     grid = lambda META: (triton.cdiv(M, META['BLOCK_SIZE_M']) * triton.cdiv(N, META['BLOCK_SIZE_N']), )
     matmul_kernel[grid](
@@ -112,7 +112,8 @@ def matmul(a, b, activation=""):
 
 
 quantiles = [0.5, 0.2, 0.8]
-a = torch.randn((target_M,12288), device='cuda', dtype=torch.float16)
-b = torch.randn((12288,8192), device='cuda', dtype=torch.float16)
+a = torch.randint(low=-128, high=127, size=(target_M, 12288), dtype=torch.int8, device='cuda')
+b = torch.randint(low=-128, high=127, size=(12288,8192), dtype=torch.int8, device='cuda')
 c = matmul(a,b)
 print(c)
+
