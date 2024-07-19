@@ -192,4 +192,3 @@ else:
     # 如果文件存在,则将数组转换为字符串,并追加到文件末尾
     with open(file_path, "a") as f:
         f.write("\n" + str(numbers))
-

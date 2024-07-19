@@ -1,7 +1,7 @@
 import torch
-import json
-import os
 import sys
+import os
+import json
 import heapq
 import triton
 import triton.language as tl
@@ -26,7 +26,7 @@ def get_configs_io_bound():
 configs = get_configs_io_bound()
 device = torch.cuda.current_device()
 capability = torch.cuda.get_device_capability()
-a = torch.randint(low=-128, high=127, size=(512,512), dtype=torch.int8, device='cuda')
+a = torch.randn((512,512), device='cuda', dtype=torch.float16)
 dtsize = a.element_size()
 dtype = a.dtype
 pruned_configs = []

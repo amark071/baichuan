@@ -3,8 +3,8 @@
     "M": 4,
     "N": 8192,
     "K": 12288,
-    "ldtype": "int8",
-    "rdtype": "int8"
+    "ldtype": "float16",
+    "rdtype": "float16"
   },
   {
     "M": 8,
