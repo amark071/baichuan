@@ -12,7 +12,7 @@ with open('meta_config.json', 'r') as file:
 time_triton=[]
 time_torch=[]
 rate=[]
-for i in range(8,14,1):
+for i in range(8,16,1):
     target_M = 2**i
     target_N = 8192
     target_K = 12288
@@ -109,8 +109,7 @@ for i in range(8,14,1):
             ACTIVATION=activation
         )
         return c
-
-
+    
     quantiles = [0.5, 0.2, 0.8]
     a = torch.randn((target_M,12288), device='cuda', dtype=torch.float16)
     b = torch.randn((12288,8192), device='cuda', dtype=torch.float16)
@@ -127,11 +126,13 @@ for i in range(8,14,1):
     time_triton.append(ms)
     time_torch.append(ms1)
     rate.append((ms1-ms)*100/ms1)
-
+del time_triton[0]
+del time_torch[0]
+del rate[0]
 print(time_torch)
 print(time_triton)
-
-x = np.arange(8,14,1)
+print(rate)
+x = np.arange(9,16,1)
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(x, time_triton, label='triton')
 ax.plot(x, time_torch, label='torch')
@@ -141,7 +142,7 @@ ax.set_ylabel('Time')
 ax.legend()
 plt.show()
 
-x = np.arange(8,14,1)
+x = np.arange(9,16,1)
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(x,rate, label='triton')
 ax.set_title('triton vs torch')
