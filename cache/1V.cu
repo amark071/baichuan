@@ -43,44 +43,43 @@ int main() {
     checkCudaErrors(err);
 
     // 定义输入和输出数据
-    float h_A[512][512];
-    float h_B[512][512];
-    float h_C[512][512];
+    float h_A[32];
+    float h_B[32];
+    float h_C[32];
     float *d_A, *d_B, *d_C;
 
-    int M=512;
-    int N=512;
-    int K=512;
+    int M=32;
+    int N=32;
+    int K=32;
     int *d_m,*d_n,*d_k;
 
-    int stride_am=512;
+    int stride_am=32;
     int stride_ak=1;
-    int stride_bk=512;
+    int stride_bk=32;
     int stride_bn=1;
-    int stride_cm=512;
+    int stride_cm=32;
     int stride_cn=1;
 
     int *d_stride_am,*d_stride_ak,*d_stride_bk,*d_stride_bn,*d_stride_cm,*d_stride_cn;
 
     // 初始化输入数据
-    for (int i = 0; i < 512; i++) 
+    for (int i = 0; i < M; i++) 
     {
-        for(int j = 0;j < 512; j++)
-            h_A[i][j] = static_cast<float>(i);       
+        
+            h_A[i] = static_cast<float>(i);       
     }
-    for (int i = 0; i < 512; i++) 
+    for (int i = 0; i < K; i++) 
     {
-        for(int j = 0;j < 512; j++)
-            h_B[i][j] = static_cast<float>(j);       
+            h_B[i]= static_cast<float>(i);       
     }
     
     // 分配设备内存
-    err = cuMemAlloc((CUdeviceptr*)&d_A, M*K * sizeof(float));
+    err = cuMemAlloc((CUdeviceptr*)&d_A, M * sizeof(float));
     if(err==CUDA_SUCCESS) std::cout<<6<<' ';
     checkCudaErrors(err);
-    err = cuMemAlloc((CUdeviceptr*)&d_B, K*N * sizeof(float));
+    err = cuMemAlloc((CUdeviceptr*)&d_B, M * sizeof(float));
     checkCudaErrors(err);
-    err = cuMemAlloc((CUdeviceptr*)&d_C, M*N * sizeof(float));
+    err = cuMemAlloc((CUdeviceptr*)&d_C, M * sizeof(float));
     checkCudaErrors(err);
 
     err = cuMemAlloc((CUdeviceptr*)&d_m, sizeof(int));
@@ -107,10 +106,10 @@ int main() {
 
 
     // 将数据从主机复制到设备
-    err = cuMemcpyHtoD((CUdeviceptr)d_A, h_A, M*K * sizeof(float));
+    err = cuMemcpyHtoD((CUdeviceptr)d_A, h_A, M * sizeof(float));
     if(err==CUDA_SUCCESS) std::cout<<9<<' ';
     checkCudaErrors(err);
-    err = cuMemcpyHtoD((CUdeviceptr)d_B, h_B, K*N * sizeof(float));
+    err = cuMemcpyHtoD((CUdeviceptr)d_B, h_B, M * sizeof(float));
     checkCudaErrors(err);
 
     err = cuMemcpyHtoD((CUdeviceptr)d_m, &M, sizeof(int));
@@ -150,13 +149,13 @@ int main() {
     checkCudaErrors(err);
 
     // 将结果从设备复制回主机
-    err = cuMemcpyDtoH(h_C, (CUdeviceptr)d_C, M*N * sizeof(float));
+    err = cuMemcpyDtoH(h_C, (CUdeviceptr)d_C, M * sizeof(float));
     if(err==CUDA_SUCCESS) std::cout<<13<<' ';
     checkCudaErrors(err);
 
     // 打印结果
     for (int i = 0; i < 10; i++) { // 打印前10个结果
-        std::cout << "C[" << i <<","<<i<<" ] = " << h_C[i][i] << std::endl;
+        std::cout << "C[" << i <<","<<i<<" ] = " << h_C[i] << std::endl;
     }
 
     // 释放设备内存

@@ -1,0 +1,1 @@
+{"num_warps": 2, "num_stages": 4, "constants": {"3": 32, "4": 32, "5": 32, "6": 4, "7": ""}, "debug": null, "arch": 89, "device_type": "cuda", "shared": 16384, "name": "matmul_cache_kernel_0d1d2d"}
