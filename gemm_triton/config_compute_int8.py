@@ -35,7 +35,7 @@ for config in configs:
     BLOCK_M, BLOCK_N, BLOCK_K, num_stages = \
         kw['BLOCK_SIZE_M'], kw['BLOCK_SIZE_N'], kw['BLOCK_SIZE_K'], config.num_stages
 
-    max_shared_memory = driver.utils.get_device_properties(device)["max_shared_mem"]
+    max_shared_memory = driver.active.utils.get_device_properties(device)["max_shared_mem"]
     required_shared_memory = (BLOCK_M + BLOCK_N) * BLOCK_K * num_stages * dtsize
     if required_shared_memory <= max_shared_memory:
         pruned_configs.append(config)
@@ -87,8 +87,7 @@ def matmul_kernel(
         stride_bk, stride_bn,
         stride_cm, stride_cn,
         BLOCK_SIZE_M: tl.constexpr, BLOCK_SIZE_N: tl.constexpr, BLOCK_SIZE_K: tl.constexpr,
-        GROUP_SIZE_M: tl.constexpr,
-        ACTIVATION: tl.constexpr
+        GROUP_SIZE_M: tl.constexpr
 ):
     pid = tl.program_id(axis=0)
     num_pid_m = tl.cdiv(M, BLOCK_SIZE_M)
@@ -113,8 +112,6 @@ def matmul_kernel(
         accumulator += tl.dot(a, b)
         a_ptrs += BLOCK_SIZE_K * stride_ak
         b_ptrs += BLOCK_SIZE_K * stride_bk
-    if ACTIVATION == "leaky_relu":
-        accumulator = leaky_relu(accumulator)
     c = accumulator
 
     offs_cm = pid_m * BLOCK_SIZE_M + tl.arange(0, BLOCK_SIZE_M)
@@ -123,10 +120,6 @@ def matmul_kernel(
     c_mask = (offs_cm[:, None] < M) & (offs_cn[None, :] < N)
     tl.store(c_ptrs, c, mask=c_mask)
 
-@triton.jit
-def leaky_relu(x):
-    x = x + 1
-    return tl.where(x >= 0, x, 0.01 * x)
 def matmul(a, b, activation=""):
 
     assert a.shape[1] == b.shape[0], "维度符合矩阵相乘要求"
@@ -143,8 +136,7 @@ def matmul(a, b, activation=""):
         M, N, K,
         a.stride(0), a.stride(1),
         b.stride(0), b.stride(1),
-        c.stride(0), c.stride(1),
-        ACTIVATION=activation
+        c.stride(0), c.stride(1)
     )
     return c
 

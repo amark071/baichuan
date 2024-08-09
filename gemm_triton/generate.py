@@ -11,14 +11,15 @@ param_ranges = {
 # 生成 100 个随机矩阵参数字典
 matrix_params = []
 num=[0,0,0,0,0,0]
-k=12288
-n=8192
+k=512
+n=512
 for m in range(4,132,4):
 #for _ in range(120):
 #    m = random.randint(param_ranges["M"][0], param_ranges["M"][1]) // 16 * 16
 #    n = random.randint(param_ranges["N"][0], param_ranges["N"][1]) // 16 * 16
 #    k = random.randint(param_ranges["K"][0], param_ranges["K"][1]) // 16 * 16
-    type1 = random.randint(1, 6)
+    #type1 = random.randint(1, 6)
+    type1 = 1
     if type1 == 1:
         a="float16"
         b="float16"

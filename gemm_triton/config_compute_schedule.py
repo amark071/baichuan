@@ -40,7 +40,7 @@ for line in lines:
             row.append(item)
     result.append(row)
 
-labels = ['M', 'N', 'K', 'ldtype', 'rdtype', 'BLOCK_SIZE_M', 'BLOCK_SIZE_N', 'BLOCK_SIZE_K', 'GROUP_SIZE_M', 'num_warps', 'num_stages']
+labels = ['M', 'N', 'K', 'ldtype', 'rdtype', 'BLOCK_SIZE_M', 'BLOCK_SIZE_N', 'BLOCK_SIZE_K', 'GROUP_SIZE_M', 'num_warps', 'num_ctas','num_stages','kernel_name']
 
 # 将数组转换为字典列表
 data = []

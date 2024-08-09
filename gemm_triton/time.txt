@@ -1,1 +1,0 @@
-m~4:4:128 ; n~8192 ; k=12288 Computation time: 685.8569 seconds(average:21.4 seconds)
