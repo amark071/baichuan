@@ -1,0 +1,8 @@
+README.md
+setup.py
+QQQ.egg-info/PKG-INFO
+QQQ.egg-info/SOURCES.txt
+QQQ.egg-info/dependency_links.txt
+QQQ.egg-info/top_level.txt
+csrc/pybind.cpp
+csrc/qqq_gemm.cu
