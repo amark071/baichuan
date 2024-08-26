@@ -28,7 +28,7 @@ for row in result:
             row_dict[label] = row[i]
         data.append(row_dict)
 print(data)
-# 将字典列表输出为 JSON 格式并保存到文件
+json_data = json.dumps(data, indent=4)
 with open('config.json', 'w') as f:
-    json.dump(data, f, indent=4)
+    f.write(json_data)
 print("All qualifying matrix parameters have been processed.")

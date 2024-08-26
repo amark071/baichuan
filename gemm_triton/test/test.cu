@@ -3,7 +3,7 @@
 extern "C" {
     #include "kernel.da01dcef_0d1d2d34567891011.h"
 }
-
+//cuda_half
 int main() {
     CUdevice device;
     CUcontext context;
@@ -17,11 +17,11 @@ int main() {
 
     for (int i = 0; i < 512; i++){
         for(int j = 0;j < 512; j++)
-            h_A[i][j] = 0.1;
+            h_A[i][j] = 1.0;
   }
      for (int i = 0; i < 512; i++){
         for(int j = 0;j < 512; j++)
-            h_B[i][j] = 0.2;
+            h_B[i][j] = 1.0;
   }
     err = cuMemAlloc((CUdeviceptr*)&d_A, M*K * sizeof(float));
     err = cuMemAlloc((CUdeviceptr*)&d_B, M*K * sizeof(float));

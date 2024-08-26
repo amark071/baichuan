@@ -13,7 +13,7 @@ matrix_params = []
 num=[0,0,0,0,0,0]
 k=512
 n=512
-for m in range(4,132,4):
+for m in range(256,512,4):
 #for _ in range(120):
 #    m = random.randint(param_ranges["M"][0], param_ranges["M"][1]) // 16 * 16
 #    n = random.randint(param_ranges["N"][0], param_ranges["N"][1]) // 16 * 16

@@ -44,8 +44,8 @@ if __name__ == "__main__":
                         help="Path to Python source containing desired kernel in its scope. File will be executed.")
     parser.add_argument("--kernel-name", "-n", type=str, default="", help="Name of the kernel to compile",
                         required=True)
-    parser.add_argument("--num-warps", "-w", type=str, default="4", help="Number of warps to launch the kernel")
-    parser.add_argument("--num-stages", "-ns", type=str, default="5",
+    parser.add_argument("--num-warps", "-w", type=int, default=4, help="Number of warps to launch the kernel")
+    parser.add_argument("--num-stages", "-ns", type=int, default=5,
                         help="Number of stages (meta-parameter of the kernel)")
     parser.add_argument("--out-name", "-on", type=str, default=None, help="Out name for the compiled kernel")
     parser.add_argument("--out-path", "-o", type=Path, default=None, help="Out filename")
